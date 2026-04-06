@@ -108,7 +108,7 @@ export default function KanbanBoard() {
   if (!isClient) {
     return (
       <div className="bg-gray-800 bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-gray-700">
-        <h2 className="text-2xl font-semibold text-gray-100 mb-6">
+        <h2 className="text-2xl font-semibold text-gray-100 text-center mb-6">
           Task Board
         </h2>
         <div className="h-[400px]" />
@@ -123,7 +123,7 @@ export default function KanbanBoard() {
       transition={{ duration: 0.5 }}
       className="bg-gray-800 bg-opacity-30 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-gray-700"
     >
-      <h2 className="text-2xl font-semibold text-gray-100 mb-6">Task Board</h2>
+      <h2 className="text-2xl font-semibold text-gray-100 text-center mb-6">Task Board</h2>
 
       {/* Add task input */}
       <div className="flex gap-2 mb-6">

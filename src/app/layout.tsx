@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -15,18 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pomodoro Task Manager",
-  description: "A simple Pomodoro task manager",
+  title: "Collabs Flow",
+  description: "A Pomodoro timer and Kanban board for AKHSS Collabs.",
   openGraph: {
-    title: "Pomodoro Task Manager",
-    description: "A simple Pomodoro task manager",
-    url: "https://productivity.cleverdeveloper.in",
-    siteName: "Pomodoro Task Manager",
-    images: [
-      {
-        url: "https://productivity.cleverdeveloper.in/og.png",
-      },
-    ],
+    title: "Collabs Flow",
+    description: "A Pomodoro timer and Kanban board for AKHSS Collabs.",
+    siteName: "Collabs Flow",
   },
   icons: {
     icon: "/logo.svg",
