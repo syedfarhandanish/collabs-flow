@@ -3,7 +3,7 @@
 import PomodoroTimer from "@/components/PomodoroTimer";
 import KanbanBoard from "@/components/KanbanBoard";
 import { TimerProvider, useTimerContext } from "@/contexts/TimerContext";
-import { SpotifyWidget } from "@/components/SpotifyWidget";
+import { YouTubeWidget } from "@/components/YouTubeWidget"; 
 import { Footer } from "@/components/Footer";
 import { YourMetrics } from "@/components/YourMetrics";
 
@@ -19,7 +19,9 @@ function AppContent() {
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <PomodoroTimer />
-            <SpotifyWidget />
+            
+            {/* The new YouTube Widget is placed right here */}
+            <YouTubeWidget />
 
             <div className="md:col-span-2">
               <KanbanBoard />
