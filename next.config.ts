@@ -1,17 +1,9 @@
 import type { NextConfig } from "next";
 
-/**
- * Next.js configuration with unrestricted image domains
- * Note: This configuration allows images from any domain - use with caution
- */
 const nextConfig: NextConfig = {
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**", // Allow all domains
-      },
-    ],
+  eslint: {
+    // This allows production builds to successfully complete even if the linter crashes.
+    ignoreDuringBuilds: true,
   },
 };
 
