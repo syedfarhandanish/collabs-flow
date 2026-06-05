@@ -1,24 +1,67 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SkipForward, Radio, Link as LinkIcon, PlayCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-// A curated list of the best ad-free, infinite study streams on YouTube
+// We now store the exact Channel ID. 
+// The fallbackId acts as a safety net in case your API call fails or hits a limit.
 const CURATED_STREAMS = [
-  { id: "jfKfPfyJRdk", name: "Lofi Girl Beats" },
-  { id: "4xDzrJKXOOY", name: "Synthwave Radio" },
-  { id: "lTRiuFIWV54", name: "Midnight Piano" },
-  { id: "7NOSDKb0HlU", name: "Ambient Study" },
-  { id: "5yx6BWlEVcU", name: "Jazz Hop Café" }
+  { channelId: "UCSJ4gkVC6NrvII8umztf0Ow", name: "Lofi Girl Beats", fallbackId: "jfKfPfyJRdk" },
+  { channelId: "UCOxqgCwgOqC2lMqC5PYz_Dg", name: "Synthwave Radio", fallbackId: "4xDzrJKXOOY" },
+  { channelId: "UC-lHJZR3Gqxm24_Vd_AJ5Yw", name: "Midnight Piano", fallbackId: "lTRiuFIWV54" },
+  { channelId: "UCqwUrclz9169A1zL58sJ-rA", name: "Ambient Study", fallbackId: "7NOSDKb0HlU" },
+  { channelId: "UCsIG9Q9kHl3xGfL2hV55P3A", name: "Jazz Hop Café", fallbackId: "5yx6BWlEVcU" }
 ];
 
 export function YouTubeWidget() {
   const [currentStreamIndex, setCurrentStreamIndex] = useState(0);
-  const [videoId, setVideoId] = useState(CURATED_STREAMS[0].id);
+  const [videoId, setVideoId] = useState("");
   const [inputUrl, setInputUrl] = useState("");
-  const [autoPlay, setAutoPlay] = useState(0); 
+  const [autoPlay, setAutoPlay] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 1. Automatically fetch the live, active Video ID whenever the station changes
+  useEffect(() => {
+    const fetchActiveStream = async () => {
+      setIsLoading(true);
+      const currentStation = CURATED_STREAMS[currentStreamIndex];
+      
+      // We look for an environment variable for the API key
+      const apiKey = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+
+      if (!apiKey) {
+        console.warn("No YouTube API key found. Using fallback ID.");
+        setVideoId(currentStation.fallbackId);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        // Query the YouTube API specifically for active live streams on this channel
+        const response = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=id&channelId=${currentStation.channelId}&eventType=live&type=video&key=${apiKey}`
+        );
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+          // Success! We grabbed the live stream ID currently broadcasting
+          setVideoId(data.items[0].id.videoId);
+        } else {
+          // If the channel is temporarily offline, use the fallback
+          setVideoId(currentStation.fallbackId);
+        }
+      } catch (error) {
+        console.error("Failed to fetch live stream ID", error);
+        setVideoId(currentStation.fallbackId);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchActiveStream();
+  }, [currentStreamIndex]);
 
   const handleUpdateVideo = () => {
     if (!inputUrl.trim()) return;
@@ -43,7 +86,6 @@ export function YouTubeWidget() {
   const handleNextStream = () => {
     const nextIndex = (currentStreamIndex + 1) % CURATED_STREAMS.length;
     setCurrentStreamIndex(nextIndex);
-    setVideoId(CURATED_STREAMS[nextIndex].id);
     setAutoPlay(1); 
   };
 
@@ -81,15 +123,21 @@ export function YouTubeWidget() {
       
       {/* Video Embed Player */}
       <div className="flex-1 w-full rounded-2xl overflow-hidden bg-black/80 border border-gray-700/50 relative aspect-video shadow-[0_8px_30px_rgba(0,0,0,0.3)] z-10 group-hover:shadow-[0_8px_40px_rgba(239,68,68,0.1)] transition-shadow duration-500">
-        <iframe
-          width="100%"
-          height="100%"
-          src={`https://www.youtube.com/embed/${videoId}?autoplay=${autoPlay}&rel=0&modestbranding=1`}
-          title="YouTube video player"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="absolute top-0 left-0 w-full h-full"
-        ></iframe>
+        {isLoading || !videoId ? (
+          <div className="absolute inset-0 flex items-center justify-center text-red-400/80 animate-pulse text-sm font-medium">
+            Tuning in to station...
+          </div>
+        ) : (
+          <iframe
+            width="100%"
+            height="100%"
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=${autoPlay}&rel=0&modestbranding=1`}
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            className="absolute top-0 left-0 w-full h-full"
+          ></iframe>
+        )}
       </div>
 
       {/* Smart Input Bar with Smooth Animated Button */}
