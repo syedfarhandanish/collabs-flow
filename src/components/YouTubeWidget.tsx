@@ -148,7 +148,7 @@ export function YouTubeWidget() {
         
         <Input
           type="text"
-          placeholder="Paste a YouTube link..."
+          placeholder="Paste a YouTube link or click Next Station..."
           value={inputUrl}
           onChange={(e) => setInputUrl(e.target.value)}
           onKeyDown={(e) => {
