@@ -1,6 +1,8 @@
 "use client";
 
-import { Flame, Keyboard, Maximize2, Palette, Settings2 } from "lucide-react";
+import { Download, Flame, Keyboard, Maximize2, Palette, Settings2 } from "lucide-react";
+import { toast } from "sonner";
+import { isIOS, useInstall } from "@/lib/pwa";
 import { motion } from "framer-motion";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -8,23 +10,7 @@ import { SCENES, useSettings } from "@/contexts/SettingsContext";
 import { useStats } from "@/contexts/StatsContext";
 import { useUI } from "@/contexts/UIContext";
 import { cn } from "@/lib/utils";
-
-export function Logo({ className }: { className?: string }) {
-  return (
-    <div className={cn("flex items-center gap-2.5", className)}>
-      <div className="relative grid h-9 w-9 place-items-center rounded-xl bg-accent-gradient btn-glow">
-        <svg viewBox="0 0 24 24" className="h-5 w-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-          <path d="M3 12c2.5-4 5.5-4 8 0s5.5 4 8 0" />
-          <path d="M3 17c2.5-4 5.5-4 8 0s5.5 4 8 0" opacity="0.55" />
-          <path d="M3 7c2.5-4 5.5-4 8 0s5.5 4 8 0" opacity="0.3" />
-        </svg>
-      </div>
-      <span className="text-lg font-semibold tracking-tight text-white">
-        collabs<span className="text-gradient">flow</span>
-      </span>
-    </div>
-  );
-}
+import { Logo } from "./Logo";
 
 function IconAction({ label, onClick, children }: { label: string; onClick?: () => void; children: React.ReactNode }) {
   return (
@@ -43,12 +29,22 @@ export function Header() {
   const { settings, update } = useSettings();
   const { streak, level } = useStats();
   const ui = useUI();
+  const pwa = useInstall();
+  const showInstall = !pwa.installed && (pwa.canInstall || isIOS());
+
+  const onInstall = async () => {
+    if (pwa.canInstall) {
+      if (await pwa.install()) toast.success("Collabs Flow installed! 🎉");
+    } else {
+      toast("Install on iPhone / iPad", { description: "Tap the Share button, then “Add to Home Screen”." });
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-[#07070c]/40 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-white/[0.06] bg-[#07070c]/40 pt-[env(safe-area-inset-top)] backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         <Logo />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="chip hidden h-10 px-3.5 sm:inline-flex">
@@ -86,6 +82,19 @@ export function Header() {
 
           <div className="mx-1 hidden h-6 w-px bg-white/10 sm:block" />
 
+          {showInstall && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={onInstall} className="icon-btn w-auto gap-1.5 px-3 text-xs font-semibold sm:px-3.5" aria-label="Install app">
+                  <Download className="h-4 w-4" />
+                  <span className="hidden lg:inline">Install app</span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Install Collabs Flow — works offline</TooltipContent>
+            </Tooltip>
+          )}
+
+          <span className="hidden sm:contents">
           <Popover>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -119,15 +128,18 @@ export function Header() {
               </div>
             </PopoverContent>
           </Popover>
+          </span>
 
           <span className="hidden sm:contents">
             <IconAction label="Keyboard shortcuts (?)" onClick={() => ui.setShortcutsOpen(true)}>
               <Keyboard className="h-4 w-4" />
             </IconAction>
           </span>
-          <IconAction label="Zen mode (Z)" onClick={() => ui.setZen(true)}>
-            <Maximize2 className="h-4 w-4" />
-          </IconAction>
+          <span className="hidden sm:contents">
+            <IconAction label="Zen mode (Z)" onClick={() => ui.setZen(true)}>
+              <Maximize2 className="h-4 w-4" />
+            </IconAction>
+          </span>
           <IconAction label="Settings" onClick={() => ui.setSettingsOpen(true)}>
             <Settings2 className="h-4 w-4" />
           </IconAction>

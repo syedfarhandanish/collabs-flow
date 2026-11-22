@@ -25,13 +25,13 @@ export function Greeting() {
     <section className="flex flex-col gap-5 py-8 md:flex-row md:items-end md:justify-between md:py-10">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
         <p className="text-sm font-medium uppercase tracking-[0.2em] text-white/45">{date}</p>
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+        <h2 className="mt-2 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
           {greeting()}
           {settings.name ? "," : ""}{" "}
           <span className="font-display font-normal italic text-gradient">
             {settings.name || "ready to flow?"}
           </span>
-        </h1>
+        </h2>
         <p className="mt-3 text-white/60">
           {today.sessions === 0
             ? "Pick a task, press start, and let the music carry you."

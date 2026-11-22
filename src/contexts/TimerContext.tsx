@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { playChime } from "@/lib/sounds";
 import { formatClock } from "@/lib/dates";
+import { SITE_NAME, SITE_TITLE } from "@/lib/site";
 import { useSettings, type Settings } from "./SettingsContext";
 import { useStats } from "./StatsContext";
 import { useTasks } from "./TasksContext";
@@ -234,10 +235,9 @@ export function TimerProvider({ children }: { children: ReactNode }) {
 
   // Tab title countdown
   useEffect(() => {
-    const base = "Collabs Flow";
     if (settings.titleCountdown && (state.running || !state.fresh)) {
-      document.title = `${formatClock(remainingSec)} · ${MODE_LABEL[state.mode]} — ${base}`;
-    } else document.title = `${base} — Study in flow`;
+      document.title = `${formatClock(remainingSec)} · ${MODE_LABEL[state.mode]} — ${SITE_NAME}`;
+    } else document.title = SITE_TITLE;
   }, [remainingSec, state.mode, state.running, state.fresh, settings.titleCountdown]);
 
   const control = useMemo<ControlCtx>(

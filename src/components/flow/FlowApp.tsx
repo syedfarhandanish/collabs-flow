@@ -20,12 +20,12 @@ import { TodayPanel } from "./TodayPanel";
 import { Insights } from "./Insights";
 import { Achievements } from "./Achievements";
 import { Scratchpad } from "./Scratchpad";
-import { Footer } from "./Footer";
 import { MiniTimer } from "./MiniTimer";
 import { ZenMode } from "./ZenMode";
 import { SettingsDialog } from "./SettingsDialog";
 import { ShortcutsDialog } from "./ShortcutsDialog";
 import { Confetti } from "./Confetti";
+import { PwaManager } from "./PwaManager";
 
 function SceneSync() {
   const { settings } = useSettings();
@@ -95,7 +95,7 @@ function Shortcuts() {
 
 function Layout() {
   return (
-    <div className="relative min-h-screen overflow-x-hidden">
+    <div className="relative min-h-[100svh]">
       <Background />
       <Header />
       <main className="mx-auto w-full max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
@@ -125,13 +125,13 @@ function Layout() {
           </div>
         </div>
       </main>
-      <Footer />
       <MiniTimer />
       <ZenMode />
       <SettingsDialog />
       <ShortcutsDialog />
       <Confetti />
       <Shortcuts />
+      <PwaManager />
     </div>
   );
 }

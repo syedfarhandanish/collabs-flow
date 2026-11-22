@@ -25,6 +25,8 @@ export interface Station {
   mood: string;
   live?: boolean;
   custom?: boolean;
+  /** Optional: with a YouTube API key, the channel's current live stream is used instead of ytId. */
+  channelId?: string;
 }
 
 /** Curated focus stations. If one goes offline, the player skips to the next automatically. */
@@ -37,6 +39,7 @@ export const STATIONS: Station[] = [
     subtitle: "Beats to relax / study to",
     mood: "Chill",
     live: true,
+    channelId: "UCSJ4gkVC6NrvII8umztf0Ow",
   },
   {
     id: "jazzy-beats",

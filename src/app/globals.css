@@ -45,11 +45,16 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+    background: #07070c;
+    -webkit-text-size-adjust: 100%;
   }
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: clip;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
   ::selection {
     background: rgb(var(--c1) / 0.45);

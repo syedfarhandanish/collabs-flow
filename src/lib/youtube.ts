@@ -121,3 +121,25 @@ export function parseYouTubeUrl(input: string): ParsedYouTube | null {
 export function thumbnailFor(videoId: string) {
   return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 }
+
+const liveCache = new Map<string, Promise<string | null>>();
+
+/**
+ * Finds the video currently live-streaming on a channel (needs NEXT_PUBLIC_YOUTUBE_API_KEY).
+ * Lets curated radio stations survive when a channel restarts its stream under a new ID.
+ */
+export function resolveLiveVideo(channelId: string): Promise<string | null> {
+  const key = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
+  if (!key) return Promise.resolve(null);
+  let pending = liveCache.get(channelId);
+  if (!pending) {
+    pending = fetch(
+      `https://www.googleapis.com/youtube/v3/search?part=id&channelId=${channelId}&eventType=live&type=video&maxResults=1&key=${key}`
+    )
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { items?: Array<{ id?: { videoId?: string } }> } | null) => d?.items?.[0]?.id?.videoId ?? null)
+      .catch(() => null);
+    liveCache.set(channelId, pending);
+  }
+  return pending;
+}

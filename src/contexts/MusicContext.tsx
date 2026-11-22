@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { X } from "lucide-react";
 import { STATIONS, type Station } from "@/lib/content";
 import { usePersistentState } from "@/lib/storage";
-import { loadYouTubeAPI, parseYouTubeUrl, YT_STATE, type YTPlayer } from "@/lib/youtube";
+import { loadYouTubeAPI, parseYouTubeUrl, resolveLiveVideo, YT_STATE, type YTPlayer } from "@/lib/youtube";
 import { cn } from "@/lib/utils";
 import { useSettings } from "./SettingsContext";
 import { useTimer } from "./TimerContext";
@@ -91,6 +91,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const duckRef = useRef(1);
   const failed = useRef(new Set<string>());
   const pausedByBreak = useRef(false);
+  const liveIds = useRef<Record<string, string>>({});
 
   const stationRef = useRef(station);
   stationRef.current = station;
@@ -146,9 +147,12 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           /* not ready yet */
         }
       }, 800);
-    } else if (autoplay) p.loadVideoById(s.ytId);
-    else p.cueVideoById(s.ytId);
-    setMeta({ title: "", author: "", videoId: s.kind === "video" ? s.ytId : null });
+    } else {
+      const id = liveIds.current[s.id] ?? s.ytId;
+      if (autoplay) p.loadVideoById(id);
+      else p.cueVideoById(id);
+    }
+    setMeta({ title: "", author: "", videoId: s.kind === "video" ? liveIds.current[s.id] ?? s.ytId : null });
   }, []);
 
   const play = useCallback(() => {
@@ -399,6 +403,18 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       readyRef.current = false;
       wrap.innerHTML = "";
     };
+  }, [loadStation]);
+
+  // Resolve the current live stream for stations that know their channel (only with an API key).
+  useEffect(() => {
+    STATIONS.filter((s) => s.channelId).forEach((s) => {
+      void resolveLiveVideo(s.channelId!).then((id) => {
+        if (!id) return;
+        liveIds.current[s.id] = id;
+        // If this station was already cued with the old ID and isn't playing yet, re-cue the live one.
+        if (loadedRef.current === s.id && !wantPlayRef.current) loadStation(s, false);
+      });
+    });
   }, [loadStation]);
 
   // React to the timer: duck or pause during breaks, resume for focus.

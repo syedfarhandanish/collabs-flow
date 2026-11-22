@@ -255,7 +255,7 @@ export function TimerCard() {
         </Tooltip>
       </div>
 
-      <div className="relative mt-5 flex items-center gap-2 text-xs text-white/45">
+      <div className="relative mt-5 flex items-center gap-2 whitespace-nowrap text-xs text-white/45">
         <button
           onClick={() => timer.addMinutes(1)}
           className="flex items-center gap-1 rounded-full px-2.5 py-1 transition hover:bg-white/[0.06] hover:text-white/80"
@@ -269,8 +269,8 @@ export function TimerCard() {
         >
           <Plus className="h-3 w-3" /> 5 min
         </button>
-        <span className="h-3 w-px bg-white/15" />
-        <span className="px-2.5">
+        <span className="hidden h-3 w-px bg-white/15 md:block" />
+        <span className="hidden whitespace-nowrap px-2.5 md:inline">
           press <kbd className="rounded border border-white/15 bg-white/5 px-1.5 py-0.5 font-mono text-[10px]">space</kbd> to {timer.running ? "pause" : "start"}
         </span>
       </div>

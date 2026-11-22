@@ -36,7 +36,7 @@ export function MiniTimer() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 30, scale: 0.9 }}
           transition={{ type: "spring", stiffness: 380, damping: 30 }}
-          className="fixed bottom-5 right-5 z-40 flex items-center gap-3 rounded-full border border-white/10 bg-[#101019]/80 py-2 pl-2 pr-3 shadow-2xl shadow-black/50 backdrop-blur-xl"
+          className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-40 max-[380px]:right-3 flex items-center gap-3 rounded-full border border-white/10 bg-[#101019]/80 py-2 pl-2 pr-3 shadow-2xl shadow-black/50 backdrop-blur-xl"
         >
           <button
             onClick={() => document.getElementById("timer")?.scrollIntoView({ behavior: "smooth", block: "center" })}

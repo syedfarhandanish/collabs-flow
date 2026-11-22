@@ -52,7 +52,7 @@ export function ZenMode() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed inset-0 z-50 isolate flex flex-col items-center justify-between bg-[#05050a]/90 px-6 py-8 backdrop-blur-2xl"
+          className="fixed inset-0 z-50 isolate flex flex-col items-center justify-between bg-[#05050a]/90 px-6 pb-[calc(2rem+env(safe-area-inset-bottom))] pt-[calc(2rem+env(safe-area-inset-top))] backdrop-blur-2xl"
         >
           <div className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 animate-breathe rounded-full bg-c1/25 blur-[120px]" />
           <div className="flex w-full max-w-6xl items-center justify-between text-white/50">

@@ -92,8 +92,12 @@ export function MusicPlayer() {
   const VolumeIcon = m.muted || m.volume === 0 ? VolumeX : m.volume < 50 ? Volume1 : Volume2;
 
   useEffect(() => {
-    const el = stripRef.current?.querySelector<HTMLElement>(`[data-station="${m.station.id}"]`);
-    el?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    // Scroll only the strip horizontally (scrollIntoView would also scroll the page).
+    const strip = stripRef.current;
+    const el = strip?.querySelector<HTMLElement>(`[data-station="${m.station.id}"]`);
+    if (strip && el) {
+      strip.scrollTo({ left: el.offsetLeft - strip.clientWidth / 2 + el.clientWidth / 2, behavior: "smooth" });
+    }
   }, [m.station.id]);
 
   return (

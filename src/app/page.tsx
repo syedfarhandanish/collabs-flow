@@ -1,14 +1,16 @@
-"use client";
-
-import dynamic from "next/dynamic";
-import { Splash } from "@/components/flow/Splash";
-
-// Everything lives in the browser (localStorage, audio, YouTube), so render client-side only.
-const FlowApp = dynamic(() => import("@/components/flow/FlowApp"), {
-  ssr: false,
-  loading: () => <Splash />,
-});
+import { AppLoader } from "@/components/flow/AppLoader";
+import { Footer } from "@/components/flow/Footer";
+import { SeoContent } from "@/components/seo/SeoContent";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 export default function Home() {
-  return <FlowApp />;
+  return (
+    <>
+      <JsonLd />
+      <AppLoader />
+      {/* Server-rendered content: readable by search engines and visible below the app */}
+      <SeoContent />
+      <Footer />
+    </>
+  );
 }
