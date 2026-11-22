@@ -9,7 +9,15 @@ export default {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			display: ['var(--font-display)', 'Georgia', 'serif'],
+  			mono: ['var(--font-geist-mono)', 'ui-monospace', 'monospace']
+  		},
   		colors: {
+  			c1: 'rgb(var(--c1) / <alpha-value>)',
+  			c2: 'rgb(var(--c2) / <alpha-value>)',
+  			c3: 'rgb(var(--c3) / <alpha-value>)',
+  			rest: 'rgb(var(--rest) / <alpha-value>)',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -67,24 +75,10 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		animation: {
-  			'meteor-effect': 'meteor 5s linear infinite',
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out'
   		},
   		keyframes: {
-  			meteor: {
-  				'0%': {
-  					transform: 'rotate(215deg) translateX(0)',
-  					opacity: '1'
-  				},
-  				'70%': {
-  					opacity: '1'
-  				},
-  				'100%': {
-  					transform: 'rotate(215deg) translateX(-500px)',
-  					opacity: '0'
-  				}
-  			},
   			'accordion-down': {
   				from: {
   					height: '0'
